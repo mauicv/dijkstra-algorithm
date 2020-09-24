@@ -1,3 +1,10 @@
+/*
+  file: util.h
+
+	Util functions:
+    get_random: returns a random double value in between lower and upper.
+*/
+
 #ifndef UTILS_H
 #define UTILS_H
 

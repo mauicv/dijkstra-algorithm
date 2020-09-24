@@ -23,10 +23,10 @@ void test_5();
 
 int main(){
   vector<void (*)()> tests = {
-    // *test_1,
-    // *test_2,
-    // *test_3,
-    // *test_4,
+    *test_1,
+    *test_2,
+    *test_3,
+    *test_4,
     *test_5
   };
 
@@ -145,7 +145,7 @@ void test_4(){
 
   assert(result.success == 1);
   assert(result.score == 4.0);
-  int node_ids[3] = {4, 5, 0};
+  int node_ids[3] = {n1.id, n6.id, m6.id};
   for (int i = 0; i<result.path.size(); i++)
     assert(result.path[i] -> id == node_ids[i]);
 }
@@ -169,9 +169,5 @@ void test_5(){
   ShortestPath spa = ShortestPath(&g);
   Result result = spa.path(&n1, &n3);
 
-  // assert(result.success == 1);
-  // assert(result.score == 4.0);
-  // int node_ids[3] = {4, 5, 0};
-  // for (int i = 0; i<result.path.size(); i++)
-  //   assert(result.path[i] -> id == node_ids[i]);
+  assert(result.success == 0);
 }

@@ -1,8 +1,9 @@
 /*
+  main:
 
-  TODO:
-    - add delete methods
-    - override equlity operator for nodes and edges
+  creates a random graph. Selects node 0 and then iterates throught the
+  rest of the nodes counting the number of connected paths that exist and
+  there scores. Finally outputs the average length of path.
 */
 
 #include <iostream>
@@ -16,24 +17,28 @@
 
 
 int main(void){
-  Graph g = Graph();
-  g.make_random_graph(50, 0.3, 1.7, 0.0, 10.0, 0.025);
-
+  Graph* g_ptr = new Graph();
+  Graph g = *g_ptr;
+  g.make_random_graph(50, 1.0, 1.0, 1.0, 10.0, 0.4);
   Node n1 = g.get_node(0);
-  Node n2 = g.get_node(9);
-
-  cout << "Computing path from: " << n1 << " -> " << n2 << endl;
-
-  ShortestPath spa = ShortestPath(&g);
-  Result result = spa.path(&n1, &n2);
-
-  if (result.success) {
-    cout << "score: " << result.score << endl;
-    cout << "path: ";
-    for (auto node:result.path)
-      cout << *node;
-    cout << endl;
-  } else {
-    cout << "No path found.";
+  Node n2 = Node(0);
+  Result result;
+  double sum = 0, count = 0;
+  ShortestPath* spa;
+  for (int i=1; i<=50; i++){
+    spa = new ShortestPath(&g);
+    n2 = g.get_node(i);
+    result = spa -> path(&n1, &n2);
+    delete spa;
+    if (result.success) {
+      sum += result.path.size();
+      count++;
+    }
   }
+  delete g_ptr;
+
+  cout << endl;
+  cout << "Total connected nodes to first node:\t" << count << endl;
+  cout << "Average size of path:\t\t\t" << sum/count << endl;
+  cout << endl;
 }

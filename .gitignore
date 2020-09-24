@@ -1,2 +1,4 @@
 run
-test
+tests
+all.cpp
+a.out

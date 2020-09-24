@@ -1,10 +1,14 @@
 /*
   file: shortest_path.h
 
-  As we construct the candidates for the shortest path we construct a Path Tree
-  that stores by reference the current node and the node from which the Path
-  travelled. This way when we start from the terminal node and follow each
-  parent until we get to the start node.
+	implementation of dijkstras algorithm. ShortestPath takes a Graph object, a
+	start and an end point. It creates a PriorityQueue instance and adds the
+	start node. It then looks at all neighbors of the start node and chooses
+	the one the least distance from it. In doing so it places it in the set of
+	node we know the shortest distance to. We iterate by looking at all of this
+	nodes neighbors choosing again the one with the shortest distance that
+	hasn't been visited yet. By iterating on this we eventually either exahaust
+	all possible routes or get to the final node.
 */
 
 #ifndef SHORTEST_PATH_H
@@ -45,26 +49,29 @@ class ShortestPath {
     vector<Node*> closed;
     Graph* G;
 
-		struct Result make_result(QueueItem* end_point, Node* t) {
+		struct Result make_result(int outcome, QueueItem* end_point, Node* t) {
 			struct Result result;
-
-			int success = end_point -> node -> id == t -> id ? 1 : 0;
-			if (success) {
-				double total_score = end_point -> score;
-				vector<Node*> path;
-				do {
-					path.push_back(end_point -> node);
-				} while ((end_point = end_point -> prev) != NULL);
-				result.path = path;
-				result.score = total_score;
-			}
-			result.success = success;
+			if (!outcome) {
+				result.success = 0;
+				return result;
+			};
+			double total_score = end_point -> score;
+			vector<Node*> path;
+			do {
+				path.push_back(end_point -> node);
+			} while ((end_point = end_point -> prev) != NULL);
+			reverse(path.begin(), path.end());
+			result.path = path;
+			result.score = total_score;
+			result.success = 1;
 			return result;
-		}
+		};
 
   public:
     ShortestPath(Graph* g):G(g){};
-
+		~ShortestPath(){
+			delete open;
+		};
     struct Result path(Node* s, Node* t){
       open = new PriorityQueue(s);
       Node* current_node;
@@ -78,7 +85,6 @@ class ShortestPath {
 					end_point = open -> top();
 					finished = 1;
 				}
-
 				vector<Node*> neighbors = this -> G -> neighbors(current_node);
         for (auto neighbor:neighbors) {
           if (none_of(closed.begin(), closed.end(), compare(neighbor))) {
@@ -89,8 +95,7 @@ class ShortestPath {
         closed.push_back(current_node);
         this -> open -> pop();
       }
-
-      return make_result(end_point, t);
+      return make_result(finished, end_point, t);
     }
 };
 

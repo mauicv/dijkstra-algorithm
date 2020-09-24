@@ -1,3 +1,18 @@
+/*
+  file: priority_queue.h
+  Implement a PriorityQueue min heap.
+
+  classes: QueueItem and PriorityQueue.
+
+  PriorityQueue implementation reference:
+    https://www.techiedelight.com/min-heap-max-heap-implementation-c/
+
+  Note: QueueItem contains a node and a reference, prev, to the previous
+  QueueItem that containes the last node in the path that makes up the score
+  value. At the end of the computation the algorithm knows the shortest path
+  by following the sequence of prev references till the NULL value.
+*/
+
 #ifndef PRIORITY_QUEUE_H
 #define PRIORITY_QUEUE_H
 
@@ -90,6 +105,10 @@ class PriorityQueue {
       QueueItem* item = new QueueItem(inital_node, NULL, 0);
       items.push_back(item);
     };
+    ~PriorityQueue(){
+      for (auto item:items)
+        delete item;
+    }
 
     int is_empty(){
       return items.size() == 0;

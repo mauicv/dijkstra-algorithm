@@ -1,5 +1,7 @@
 /*
-  Implments graph ADS.
+  File: graph.h
+
+  Classes: Node, Edge, Graph
 */
 
 #ifndef GRAPH_H
@@ -14,6 +16,9 @@
 
 using namespace std;
 
+/*
+  class: Node
+*/
 class Node {
   public:
     double value;
@@ -22,7 +27,7 @@ class Node {
       this -> id = this -> count++;
     };
     friend ostream & operator << (ostream& os, Node& n){
-      os << " (" << n.id << ", " << n.value << ") ";
+      os << " (" << n.id << ") ";
       return os;
     };
 
@@ -32,6 +37,12 @@ class Node {
 
 int Node::count = 0;
 
+/*
+  class: Edge
+
+  Contains a value or a distance and two references to nodes. Note that `from`
+  and `to` are equivalent as the graphs we consider here are bidirected.
+*/
 class Edge {
   public:
     Node* from;
@@ -46,6 +57,12 @@ class Edge {
     };
 };
 
+/*
+  class: Graph
+
+  We represent a graph with two vectors. One contains all the nodes and the
+  other all the edges between those nodes.
+*/
 class Graph {
   public:
     int _num_edges;
@@ -62,7 +79,14 @@ class Graph {
       vector<Edge>* edges_ptr = new vector<Edge>();
       this -> edges = *edges_ptr;
     };
+    ~Graph(){}
 
+    /*
+      make_random_graph creates graph with node values between nv_range_low and
+      nv_range_high. Edge values between ev_range_low and ev_range_high.
+      We randomly generate edges between each pair of nodes with probability
+      cprob.
+    */
     void make_random_graph(int n,
       double nv_range_low,
       double nv_range_high,
